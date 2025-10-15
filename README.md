@@ -16,6 +16,7 @@
 
 ```
 src/
+├── main_controller.js      # メイン関数（エントリーポイント）
 ├── card_controller.js      # メイン処理とカード会社別の処理制御
 ├── gmail_controller.js     # Gmail連携機能
 ├── slack_controller.js     # Slack通知機能
@@ -50,9 +51,17 @@ src/
 
 現在、以下のカード会社の利用通知メールに対応しています：
 
-- リクルートカード
-- JCB CARD W
-- その他（追加設定により拡張可能）
+- **JCBグループ**
+  - リクルートカード
+  - JCB CARD W
+  - その他JCB系カード
+- **三井住友カード (SMBC)**
+  - 三井住友カードVISA
+  - その他三井住友カード
+- **ビューカード (VIEW)**
+  - ビューカード系列
+
+各カード会社のメール形式に応じたパーサーを実装済みです。新しいカード会社への対応も`CardController.CARD_RECEIVES`に処理関数を追加することで可能です。
 
 ## 使用方法
 
@@ -60,7 +69,7 @@ src/
 2. 必要なAPIを有効化（Gmail API、Calendar API、Sheets API）
 3. スクリプトプロパティを設定
 4. Googleスプレッドシートを準備
-5. `CardController.main()`を定期実行するトリガーを設定
+5. `main()`関数を定期実行するトリガーを設定
 
 ## 機能詳細
 
