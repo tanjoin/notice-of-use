@@ -41,6 +41,8 @@ class CardController {
             let cardTotal = cardRowData.total;
             let cardEmoji = cardRowData.emoji;
             let total = SheetController.getTotalPrice();
+            let lastMonthSum = cardRowData.last_month_total;
+            let lastMonthTotal = SheetController.getLastMonthTotalPrice();
             SlackController.chatPostRiyoMessage(
               username,
               cardEmoji,
@@ -51,7 +53,9 @@ class CardController {
               result.price,
               cardTotal,
               total,
-              GmailController.createUrl(data.id)
+              GmailController.createUrl(data.id),
+              lastMonthSum,
+              lastMonthTotal
             );
 
             CalendarController.insertCalendar(

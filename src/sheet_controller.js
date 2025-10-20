@@ -81,6 +81,9 @@ class SheetController {
   static get CARD_INFO_COLUMN_EMOJI() {
     return 7;
   }
+  static get CARD_INFO_COLUMN_LAST_MONTH_TOTAL() {
+    return 8;
+  }
 
   static getCardRowData(card_name) {
     let sheet = SheetController.getCardInfoSheet();
@@ -91,6 +94,7 @@ class SheetController {
           total: sheet.getRange(i, SheetController.CARD_INFO_COLUMN_TOTAL).getDisplayValue(),
           brand: sheet.getRange(i, SheetController.CARD_INFO_COLUMN_BRAND).getDisplayValue(),
           emoji: sheet.getRange(i, SheetController.CARD_INFO_COLUMN_EMOJI).getDisplayValue(),
+          last_month_total: sheet.getRange(i, SheetController.CARD_INFO_COLUMN_LAST_MONTH_TOTAL).getDisplayValue(),
         };
       }
     }
@@ -99,7 +103,13 @@ class SheetController {
 
   static getTotalPrice() {
     let sheet = SheetController.getCardInfoSheet();
-    let total = sheet.getRange(2, 2).getDisplayValue();
+    let total = sheet.getRange(2, SheetController.CARD_INFO_COLUMN_TOTAL).getDisplayValue();
+    return total;
+  }
+
+  static getLastMonthTotalPrice() {
+    let sheet = SheetController.getCardInfoSheet();
+    let total = sheet.getRange(2, SheetController.CARD_INFO_COLUMN_LAST_MONTH_TOTAL).getDisplayValue();
     return total;
   }
 };
