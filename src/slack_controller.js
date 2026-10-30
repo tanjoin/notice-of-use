@@ -6,14 +6,16 @@ class SlackController {
     return "https://slack.com/api/chat.postMessage";
   }
 
-  static chatPostRiyoMessage(username, icon_emoji, card_name, dateOfUse, store, transaction, price, sum, total, url, last_month_sum, last_month_total) {
+  static chatPostRiyoMessage(username, icon_emoji, card_name, dateOfUse, store, transaction, price, sum, total, url, last_month_sum, last_month_total, last_month_one_year_total) {
     var payload = {
-      token: AUTH_TOKEN,
+      token: SlackController.AUTH_TOKEN,
       channel: "#money",
       parse: "none",
       username: username,
       icon_emoji: icon_emoji,
       text: `【${card_name}】 ${store} ${transaction ?? ""}`,
+      fallback: `【${card_name}】 ${dateOfUse} ${store} ${price} ${transaction ?? ""}`,
+      color: (transaction === "取消") ? 'danger' : 'good',
       attachments: JSON.stringify([
         {
           color: "success",
@@ -33,12 +35,7 @@ class SlackController {
             {
               title: "カード合計",
               value: sum,
-              short: false,
-            },
-            {
-              title: "今月総利用金額",
-              value: total,
-              short: false,
+              short: true,
             },
             {
               title: "前回のカード合計",
@@ -46,10 +43,20 @@ class SlackController {
               short: true,
             },
             {
+              title: "今月総利用金額",
+              value: total,
+              short: true,
+            },
+            {
               title: "先月総利用金額",
               value: last_month_total,
               short: true,
             },
+            {
+              title: '先月までの年間カード利用額',
+              value: last_month_one_year_total,
+              short: true
+            }
           ],
         },
       ]),

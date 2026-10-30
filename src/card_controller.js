@@ -43,6 +43,7 @@ class CardController {
             let total = SheetController.getTotalPrice();
             let lastMonthSum = cardRowData.last_month_total;
             let lastMonthTotal = SheetController.getLastMonthTotalPrice();
+            let lastMonthOneYearTotal = cardRowData.last_month_one_year_total;
             SlackController.chatPostRiyoMessage(
               username,
               cardEmoji,
@@ -55,7 +56,8 @@ class CardController {
               total,
               GmailController.createUrl(data.id),
               lastMonthSum,
-              lastMonthTotal
+              lastMonthTotal,
+              lastMonthOneYearTotal
             );
 
             CalendarController.insertCalendar(
@@ -142,6 +144,21 @@ class CardController {
         let transaction = null;
         callback({ card, dateOfUse, store, transaction, price });
       },
+      JCB__4: (id, date, subject, plainBody, callback) => {
+        // カード名称　：　リクルートカード
+        let card = plainBody.match(/カード名称　：　(.*)\r\n/m)?.at(1);
+        // 【日時（日本時間）】　2026/02/04 14:20
+        let dateOfUse = plainBody
+          .match(/【日時（日本時間）】　(.*)\r\n/m)
+          ?.at(1);
+        // 【金額】- 17,875円（取消）
+        let price = plainBody.match(/【金額】- (.*)（取消）\r\n/m)?.at(1);
+        price = `-${price}`;
+        // 【ご利用先】　ニクノハナマサ　ニシシンバシテン
+        let store = plainBody.match(/【ご利用先】　(.*)\r\n/m)?.at(1);
+        let transaction = "取消";
+        callback({ card, dateOfUse, store, transaction, price });
+      },
       SMBC_1: (id, date, subject, plainBody, callback) => {
         // ご利用カード：三井住友カードＶＩＳＡ
         let card = plainBody.match(/ご利用カード：(.*)\r\n/m)?.at(1);
@@ -165,6 +182,19 @@ class CardController {
         // 利用加盟店
         let store = plainBody.match(/・ 利用加盟店 ：(.*)\r\n/m)?.at(1);
         let transaction = null;
+        callback({ card, dateOfUse, store, transaction, price });
+      },
+      SMBC_2: (id, date, subject, plainBody, callback) => {
+        // ご利用カード：三井住友カードＶＩＳＡ
+        let card = plainBody.match(/ご利用カード：(.*)\r\n/m)?.at(1);
+        // ◇利用日：2023/07/22 20:41
+        let dateOfUse = plainBody.match(/◇利用日：(.*)\r\n/m)?.at(1);
+        // ◇利用先：Visa加盟店
+        let store = plainBody.match(/◇利用先：(.*)\r\n/m)?.at(1);
+        // ◇利用取引：買物
+        let transaction = plainBody.match(/◇利用取引：(.*)\r\n/m)?.at(1);
+        // ◇利用金額：1,093円
+        let price = plainBody.match(/◇利用金額：(.*)\r\n/m)?.at(1);
         callback({ card, dateOfUse, store, transaction, price });
       },
     };
