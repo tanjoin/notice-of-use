@@ -65,7 +65,7 @@ class SlackController {
       method: "post",
       payload: payload,
     };
-    var response = UrlFetchApp.fetch(SLACK_URL_ROOMS_MESSAGE, params);
+    var response = UrlFetchApp.fetch(SlackController.SLACK_URL_ROOMS_MESSAGE, params);
     return response;
   }
 }
